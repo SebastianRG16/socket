@@ -46,11 +46,11 @@ const pgPool = new Pool({
 const wss = new WebSocket.Server({ server });
 
 wss.on('connection', (ws) => {
-  console.log('Cliente conectado');
+  // console.log('Cliente conectado');
 
   // Escuchar notificaciones desde PostgreSQL
   const notificationCallback = (payload) => {
-    console.log(`Notificación recibida en el canal: ${payload.channel}`);
+    // console.log(`Notificación recibida en el canal: ${payload.channel}`);
     // Puedes procesar la notificación según tus necesidades
     // Por ejemplo, enviarla a través de WebSocket al cliente
     ws.send(`Notificación: ${payload.payload}`);
@@ -58,26 +58,26 @@ wss.on('connection', (ws) => {
 
   pgPool.connect((err, client, done) => {
     if (err) {
-      console.error('Error al conectarse a la base de datos:', err.message);
+      // console.error('Error al conectarse a la base de datos:', err.message);
       return;
     }
     client.on('notification', notificationCallback);
     const query = 'LISTEN preregistro_registro_event'; // Escucha el canal de notificación
     client.query(query, (err) => {
       if (err) {
-        console.error('Error al iniciar la escucha de cambios:', err.message);
+        // console.error('Error al iniciar la escucha de cambios:', err.message);
         return;
       }
-      console.log('Escuchando cambios en el canal');
+      // console.log('Escuchando cambios en el canal');
     });
   });
 
   // Manejar la desconexión del cliente
   ws.on('close', () => {
-    console.log('Cliente desconectado');
+    // console.log('Cliente desconectado');
   });
 });
 
 server.listen(8000, () => {
-  console.log('Servidor WebSocket escuchando en el puerto 8000');
+  // console.log('Servidor WebSocket escuchando en el puerto 8000');
 });
